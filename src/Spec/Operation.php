@@ -158,6 +158,9 @@ class Operation {
 				$schema['required'] = $requiredProperties;
 			}
 
+            // Remove `readonly` properties from request body, they don't need to be posted to REST API.
+            $schema = Util::removeArrayIfKeyExistsAndTruthyRecursively($schema, 'readonly');
+
 			$schema = Util::removeArrayKeysRecursively( $schema, array( 'context', 'readonly' ) );
 			Util::modifyArrayValueByKeyRecursive($schema, 'type', function($type) {
 				return Util::normalzieInvalidType($type);

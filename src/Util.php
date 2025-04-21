@@ -3,6 +3,22 @@
 namespace WPOpenAPI;
 
 class Util {
+
+    public static function removeArrayIfKeyExistsAndTruthyRecursively(array $array, string $key): array {
+        foreach ($array as $k => $v) {
+            if (is_array($v)) {
+                // If the key exists and is truthy, remove this sub-array
+                if (!empty($v[$key])) {
+                    unset($array[$k]);
+                    continue;
+                }
+                // Otherwise, recurse into it
+                $array[$k] = self::removeArrayIfKeyExistsAndTruthyRecursively($v, $key);
+            }
+        }
+        return $array;
+    }
+
 	public static function removeArrayKeysRecursively( array $array, array $keysToRemove ): array {
 		foreach ($array as $key => &$value) {
 			if (in_array($key, $keysToRemove, true)) {
